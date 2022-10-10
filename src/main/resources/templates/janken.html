@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <h1>Janken GAME!</h1>
+    <div th:if="${name}">
+      Hi [[${name}]]
+    </div>
+    <a href="/jankenchoice?hand=0">グー</a>
+    <a href="/jankenchoice?hand=1">パー</a>
+    <a href="/jankenchoice?hand=2">チョキ</a>
+
+    <div th:if="${my_choice}">
+      あなたの手は[[${my_choice}]]。
+    </div>
+
+    <div th:if="${cpu_choice}">
+      相手の手は[[${cpu_choice}]]。
+    </div>
+
+    <div th:if="${result}">
+      結果は[[${result}]]です。
+    </div>
+  </body>
+</html>
