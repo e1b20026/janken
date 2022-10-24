@@ -1,34 +1,38 @@
 package oit.is.z1665.kaizi.janken.controller;
 
+import java.security.Principal;
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import oit.is.z1665.kaizi.janken.model.*;
 
-import java.security.Principal;
+import oit.is.z1665.kaizi.janken.model.*;
 
 @Controller
 @RequestMapping("/janken")
 public class JankenController {
 
   @Autowired
-  private Entry entry;
+  UserMapper userMapper;
 
   @PostMapping()
   public String janken(@RequestParam String name, ModelMap model) {
     model.addAttribute("name", name);
     return "janken.html";
   }
-  @GetMapping()
-  public String janken(Principal prin, ModelMap model) {
-    String loginUser = prin.getName();
-    this.entry.addUser(loginUser);
-    model.addAttribute("entry", this.entry);
 
+  @GetMapping()
+  @Transactional
+  public String janken(Principal prin, ModelMap model) {
+    ArrayList<User> users = userMapper.selectAllByUser();
+    model.addAttribute("users", users);
     return "janken.html";
   }
 
