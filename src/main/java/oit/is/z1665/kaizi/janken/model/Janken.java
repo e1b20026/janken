@@ -39,11 +39,11 @@ public class Janken {
   public String Get_myhand() {
     switch (this.hand) {
       case 0:
-        return "グー";
+        return "Gu";
       case 1:
-        return "パー";
+        return "Pa";
       case 2:
-        return "チョキ";
+        return "Choki";
     }
     return "";
   }
@@ -52,11 +52,11 @@ public class Janken {
 
     switch (this.cpu_hand) {
       case 0:
-        return "グー";
+        return "Gu";
       case 1:
-        return "パー";
+        return "Pa";
       case 2:
-        return "チョキ";
+        return "Choki";
     }
     return "";
   }

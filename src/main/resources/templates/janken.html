@@ -13,7 +13,7 @@
     <div th:if="${users}">
       <div th:each="user,stat:${users}">
         <tr>
-          <td>ユーザ名:<a th:href="@{/janken/match(id=${user.id})}">[[${user.name}]]</a>></td>
+          <td>[[${user.id}+1]]:<a th:href="@{/match(id=${user.id})}">[[${user.name}]]</a></td>
         </tr>
       </div>
     </div>

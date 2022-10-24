@@ -1,7 +1,7 @@
 package oit.is.z1665.kaizi.janken.model;
 
 public class User {
-  int id;
+  public int id;
   String name;
 
   // Thymeleafでフィールドを扱うためにはgetter/setterが必ず必要

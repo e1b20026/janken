@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import oit.is.z1665.kaizi.janken.model.*;
 
 @Controller
-@RequestMapping("/janken")
+@RequestMapping()
 public class JankenController {
 
   @Autowired
@@ -26,13 +26,13 @@ public class JankenController {
   @Autowired
   MatchMapper matchMapper;
 
-  @PostMapping()
+  @PostMapping("/janken")
   public String janken(@RequestParam String name, ModelMap model) {
     model.addAttribute("name", name);
     return "janken.html";
   }
 
-  @GetMapping()
+  @GetMapping("/janken")
   @Transactional
   public String janken(Principal prin, ModelMap model) {
     ArrayList<User> users = userMapper.selectAllByUser();
@@ -42,7 +42,7 @@ public class JankenController {
     return "janken.html";
   }
 
-  @GetMapping("/jankenchoice")
+  @GetMapping("/janken/jankenchoice")
   public String janken(@RequestParam Integer hand, ModelMap model) {
     Janken janken = new Janken(hand);
     model.addAttribute("my_choice", janken.Get_myhand());
@@ -52,14 +52,36 @@ public class JankenController {
     return "janken.html";
   }
 
+  @GetMapping("/fight")
+  public String janken(Principal prin, @RequestParam Integer id, @RequestParam Integer hand, ModelMap model) {
+    Janken janken = new Janken(hand);
+    User users = userMapper.selectByName(id);
+    User my_users = userMapper.selectByUser(prin.getName());
+
+    Match match_data = new Match(my_users.getId(), users.getId(), janken.Get_myhand(), janken.Get_cpuhand());
+    matchMapper.insertMatch(match_data);
+
+    model.addAttribute("my_users", my_users);
+    model.addAttribute("users", users);
+
+    model.addAttribute("my_hand", janken.Get_myhand());
+    model.addAttribute("cpu_hand", janken.Get_cpuhand());
+    model.addAttribute("result", janken.result());
+
+    return "match.html";
+  }
+
   @GetMapping("/match")
   @Transactional
   public String match(@RequestParam Integer id, Principal prin, ModelMap model) {
     String login_name = prin.getName();
+    User my_users = userMapper.selectByUser(login_name);
     User users = userMapper.selectByName(id);
-    model.addAttribute("login_name",login_name);
-    model.addAttribute("users",users);
+    model.addAttribute("my_users", my_users);
+    model.addAttribute("users", users);
     return "match.html";
   }
+
+
 
 }
