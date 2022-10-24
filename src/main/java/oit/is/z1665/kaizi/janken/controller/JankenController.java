@@ -22,6 +22,9 @@ public class JankenController {
   @Autowired
   UserMapper userMapper;
 
+  @Autowired
+  MatchMapper matchMapper;
+
   @PostMapping()
   public String janken(@RequestParam String name, ModelMap model) {
     model.addAttribute("name", name);
@@ -32,7 +35,9 @@ public class JankenController {
   @Transactional
   public String janken(Principal prin, ModelMap model) {
     ArrayList<User> users = userMapper.selectAllByUser();
+    ArrayList<Match> matches = matchMapper.selectAllByMatch();
     model.addAttribute("users", users);
+    model.addAttribute("matches", matches);
     return "janken.html";
   }
 

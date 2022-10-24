@@ -9,11 +9,24 @@
       Hi
       <span sec:authentication="name"></span>
     </div>
-    <p>エントリー</p>
+    <h2>エントリー</h2>
     <div th:if="${users}">
       <div th:each="user,stat:${users}">
         <tr>
           <td>ユーザ名:[[${user.name}]]</td>
+        </tr>
+      </div>
+    </div>
+
+    <h2>試合結果</h2>
+    <div th:if="${matches}">
+      <div th:each="match,stat:${matches}">
+        <tr>
+          <td>id:[[${stat.index}+1]]</td>
+          <td>user1:[[${match.user1}]]</td>
+          <td>user2:[[${match.user2}]]</td>
+          <td>user1の手:[[${match.user1Hand}]]</td>
+          <td>user2の手:[[${match.user2Hand}]]</td>
         </tr>
       </div>
     </div>
