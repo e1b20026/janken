@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Janken Game</title>
+</head>
+
+<body>
+  <h1>Match</h1>
+
+  <div th:if="${my_users}">
+    <h2 th:if="${users}">
+      [[${my_users.name}]] vs [[${users.name}]]
+    </h2>
+  </div>
+  <a th:href="@{/fight(id=${users.id},hand=0)}">Gu</a>
+  <a th:href="@{/fight(id=${users.id},hand=1)}">Choki</a>
+  <a th:href="@{/fight(id=${users.id},hand=2)}">Pa</a>
+  <p>
+  <div th:if="${my_hand}">
+    あなたの手:[[${my_hand}]]
+  </div>
+  <div th:if="${cpu_hand}">
+    相手の手:[[${cpu_hand}]]
+  </div>
+  <div th:if="${result}">
+    結果:[[${result}]]
+  </div>
+  </p>
+  <a href="/janken">もどる</a>
+</body>
+
+</html>

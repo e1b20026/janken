@@ -38,8 +38,13 @@ public class JankenAuthConfiguration {
         .password("$2y$10$VpYfRTjDT0sd.DK0Ni419O5lnLz3oTQLfSEtPLalJhHYGUqO3VI4y")
         .roles("USER")
         .build();
+    UserDetails ほんだ = users
+        .username("ほんだ")
+        .password("$2y$10$lJWWqRB6Wkki1Euhlta69.3NH7B7bFy/5Dgw5I.qDXuPfPThZIzuW")
+        .roles("USER")
+        .build();
     // 生成したユーザをImMemoryUserDetailsManagerに渡す（いくつでも良い）
-    return new InMemoryUserDetailsManager(user1, user2);
+    return new InMemoryUserDetailsManager(user1, user2, ほんだ);
   }
 
   /**
@@ -68,6 +73,8 @@ public class JankenAuthConfiguration {
      * HTTPヘッダのX-Frame-OptionsがDENYになるとiframeでlocalhostでのアプリが使えなくなるので，H2DBのWebクライアントのためだけにdisableにする必要がある
      */
 
+    http.csrf().disable();
+    http.headers().frameOptions().disable();
     return http.build();
 
   }

@@ -5,31 +5,32 @@
   </head>
   <body>
     <h1>Janken GAME!</h1>
-    <p>エントリー</p>
-    <div th:if="${entry}">
-      <ul>
-        <li th:each="user : ${entry.users}">[[${user}]]</li>
-      </ul>
-    </div>
     <div>
       Hi
       <span sec:authentication="name"></span>
     </div>
-    <a href="/janken/jankenchoice?hand=0">グー</a>
-    <a href="/janken/jankenchoice?hand=1">パー</a>
-    <a href="/janken/jankenchoice?hand=2">チョキ</a>
-
-    <div th:if="${my_choice}">
-      あなたの手は[[${my_choice}]]。
+    <h2>エントリー</h2>
+    <div th:if="${users}">
+      <div th:each="user,stat:${users}">
+        <tr>
+          <td>[[${user.id}+1]]:<a th:href="@{/match(id=${user.id})}">[[${user.name}]]</a></td>
+        </tr>
+      </div>
     </div>
 
-    <div th:if="${cpu_choice}">
-      相手の手は[[${cpu_choice}]]。
+    <h2>試合結果</h2>
+    <div th:if="${matches}">
+      <div th:each="match,stat:${matches}">
+        <tr>
+          <td>id:[[${stat.index}+1]]</td>
+          <td>user1:[[${match.user1}]]</td>
+          <td>user2:[[${match.user2}]]</td>
+          <td>user1の手:[[${match.user1Hand}]]</td>
+          <td>user2の手:[[${match.user2Hand}]]</td>
+        </tr>
+      </div>
     </div>
 
-    <div th:if="${result}">
-      結果は[[${result}]]です。
-    </div>
 
     <p><a href="/logout">ログアウト</a></p>
   </body>
