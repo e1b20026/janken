@@ -73,6 +73,8 @@ public class JankenAuthConfiguration {
      * HTTPヘッダのX-Frame-OptionsがDENYになるとiframeでlocalhostでのアプリが使えなくなるので，H2DBのWebクライアントのためだけにdisableにする必要がある
      */
 
+    http.csrf().disable();
+    http.headers().frameOptions().disable();
     return http.build();
 
   }
