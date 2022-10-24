@@ -13,7 +13,7 @@
     <div th:if="${users}">
       <div th:each="user,stat:${users}">
         <tr>
-          <td>ユーザ名:[[${user.name}]]</td>
+          <td>ユーザ名:<a th:href="@{/janken/match(id=${user.id})}">[[${user.name}]]</a>></td>
         </tr>
       </div>
     </div>
@@ -30,21 +30,7 @@
         </tr>
       </div>
     </div>
-    <a href="/janken/jankenchoice?hand=0">グー</a>
-    <a href="/janken/jankenchoice?hand=1">パー</a>
-    <a href="/janken/jankenchoice?hand=2">チョキ</a>
 
-    <div th:if="${my_choice}">
-      あなたの手は[[${my_choice}]]。
-    </div>
-
-    <div th:if="${cpu_choice}">
-      相手の手は[[${cpu_choice}]]。
-    </div>
-
-    <div th:if="${result}">
-      結果は[[${result}]]です。
-    </div>
 
     <p><a href="/logout">ログアウト</a></p>
   </body>

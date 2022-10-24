@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/schema/security">
+
+<head>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Match</h1>
+
+  <h2 th:if="${users}">
+    [[${login_name}]] V.S.[[${users.name}]]
+  </h2>
+  </div>
+  <a href="/janken/jankenchoice?hand=0">グー</a>
+  <a href="/janken/jankenchoice?hand=1">パー</a>
+  <a href="/janken/jankenchoice?hand=2">チョキ</a>
+
+  <div th:if="${my_choice}">
+    あなたの手は[[${my_choice}]]。
+  </div>
+
+  <div th:if="${cpu_choice}">
+    相手の手は[[${cpu_choice}]]。
+  </div>
+
+  <div th:if="${result}">
+    結果は[[${result}]]です。
+  </div>
+
+  <p><a href="/janken">もどる</a></p>
+</body>
+
+</html>

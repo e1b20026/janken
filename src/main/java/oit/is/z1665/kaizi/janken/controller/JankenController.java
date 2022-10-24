@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.PathVariable;
+//import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,5 +52,14 @@ public class JankenController {
     return "janken.html";
   }
 
+  @GetMapping("/match")
+  @Transactional
+  public String match(@RequestParam Integer id, Principal prin, ModelMap model) {
+    String login_name = prin.getName();
+    User users = userMapper.selectByName(id);
+    model.addAttribute("login_name",login_name);
+    model.addAttribute("users",users);
+    return "match.html";
+  }
 
 }
