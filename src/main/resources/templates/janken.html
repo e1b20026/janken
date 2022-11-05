@@ -18,6 +18,15 @@
       </div>
     </div>
 
+    <h2>アクティブな試合</h2>
+    <div th:if="${matchinfo}">
+      <div th:each="info,stat:${matchinfo}">
+        <tr>
+          <td>id:[[${info.id}]] user1:[[${info.user1}]] user2:[[${info.user2}]] isActive:[[${info.isActive}]]</td>
+        </tr>
+      </div>
+    </div>
+
     <h2>試合結果</h2>
     <div th:if="${matches}">
       <div th:each="match,stat:${matches}">

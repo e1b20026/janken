@@ -40,6 +40,8 @@ public class JankenController {
   public String janken(Principal prin, ModelMap model) {
     ArrayList<User> users = userMapper.selectAllByUser();
     ArrayList<Match> matches = matchMapper.selectAllByMatch();
+    ArrayList<Matchinfo> matchinfo = matchinfoMapper.selectTrueByMatchinfo();
+    model.addAttribute("matchinfo",matchinfo);
     model.addAttribute("users", users);
     model.addAttribute("matches", matches);
     return "janken.html";
@@ -61,8 +63,8 @@ public class JankenController {
     User users = userMapper.selectByName(id);
     User my_users = userMapper.selectByUser(prin.getName());
 
-    Matchinfo matchinfo = new Matchinfo(my_users.getId(),users.getId(),janken.Get_myhand(),true);
-
+    Matchinfo matchinfo = new Matchinfo(my_users.getId(), users.getId(), janken.Get_myhand());
+    matchinfo.setIsActive(true);
     matchinfoMapper.insertMatchinfo(matchinfo);
 
     Match match_data = new Match(my_users.getId(), users.getId(), janken.Get_myhand(), janken.Get_cpuhand());
