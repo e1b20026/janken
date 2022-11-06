@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Janken Game</title>
+  <script>
+    window.onload = function (){
+      var sse = new EventSource('/fight/kekka');
+      sse.onmessage = function (event){
+        console.log(event.data);
+        document.getElementById("h2").textContent = "結果";
+        document.getElementById("p1").textContent = "Match:" + event.data;
+        document.getElementById("a").textContent = "もどる"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <h1>相手の手を待ってます</h1>
+
+  <div>
+    Hi
+    <span sec:authentication="name"></span>
+  </div>
+
+  <h2 id = "h2"></h2>
+  <div id="p1"></div>
+  <br>
+  <a id = "a" th:href = "@{/kekka/match(id=${users.id})}"></a>
+</body>
+
+</html>
