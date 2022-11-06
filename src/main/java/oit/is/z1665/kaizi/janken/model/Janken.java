@@ -41,9 +41,9 @@ public class Janken {
       case 0:
         return "Gu";
       case 1:
-        return "Pa";
-      case 2:
         return "Choki";
+      case 2:
+        return "Pa";
     }
     return "";
   }

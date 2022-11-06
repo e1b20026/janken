@@ -1,5 +1,6 @@
 package oit.is.z1665.kaizi.janken.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 
@@ -13,8 +14,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import oit.is.z1665.kaizi.janken.model.*;
+
+import oit.is.z1665.kaizi.janken.service.*;
 
 @Controller
 @RequestMapping()
@@ -28,6 +34,11 @@ public class JankenController {
 
   @Autowired
   MatchinfoMapper matchinfoMapper;
+
+  private final Logger logger = LoggerFactory.getLogger(JankenController.class);
+
+  @Autowired
+  private AsyncKekka kekka;
 
   @PostMapping("/janken")
   public String janken(@RequestParam String name, ModelMap model) {
@@ -59,16 +70,34 @@ public class JankenController {
 
   @GetMapping("/fight")
   public String janken(Principal prin, @RequestParam Integer id, @RequestParam Integer hand, ModelMap model) {
+    int count = 0;//取得したレコードに自分がいる場合のみカウントが増加する
     Janken janken = new Janken(hand);
     User users = userMapper.selectByName(id);
     User my_users = userMapper.selectByUser(prin.getName());
 
-    Matchinfo matchinfo = new Matchinfo(my_users.getId(), users.getId(), janken.Get_myhand());
-    matchinfo.setIsActive(true);
-    matchinfoMapper.insertMatchinfo(matchinfo);
+    ArrayList<Matchinfo> matchenemy = matchinfoMapper.selectTrueByMatchinfo();
+    for (Matchinfo match : matchenemy) {
+      if (match.getUser2() == my_users.id) {
+        count++;
+      }
+    }
 
-    Match match_data = new Match(my_users.getId(), users.getId(), janken.Get_myhand(), janken.Get_cpuhand());
-    matchMapper.insertMatch(match_data);
+    if (count == 0) {
+      Matchinfo matchinfo = new Matchinfo(my_users.getId(), users.getId(), janken.Get_myhand());
+      matchinfo.setIsActive(true);
+      matchinfoMapper.insertMatchinfo(matchinfo);
+    }
+    else{
+      Matchinfo matchuser = matchinfoMapper.selectCheckUserByMatchinfo(users.getId(), my_users.getId());
+      Match matches = new Match(my_users.getId(), users.getId(), janken.Get_myhand(), matchuser.getUser1Hand());
+      matches.setIsActive(true);
+      matchMapper.insertMatch(matches);
+      count = 0;
+    }
+
+
+    //Match match_data = new Match(my_users.getId(), users.getId(), janken.Get_myhand(), janken.Get_cpuhand());
+    //matchMapper.insertMatch(match_data);
 
     model.addAttribute("my_users", my_users);
     model.addAttribute("users", users);
@@ -91,6 +120,37 @@ public class JankenController {
     return "match.html";
   }
 
+  @GetMapping("/kekka/match")
+  @Transactional
+  public String match(Principal prin, @RequestParam Integer id, ModelMap model) {
+    String login_name = prin.getName();
+    User my_users = userMapper.selectByUser(login_name);
+    User users = userMapper.selectByName(id);
 
+    Match match = matchMapper.selectUpdataByMatch(my_users.getId(), users.getId());
+    matchMapper.updateByisActive(match);
+    Matchinfo matchinfo = matchinfoMapper.selectCheckUserByMatchinfo(my_users.getId(), users.getId());
+    matchinfoMapper.updateByisActive(matchinfo);
 
+    model.addAttribute("my_users", my_users);
+    model.addAttribute("users", users);
+    return "match.html";
+  }
+
+  @GetMapping("/fight/kekka")
+  public SseEmitter result() {
+    // infoレベルでログを出力する
+    // finalは初期化したあとに再代入が行われない変数につける（意図しない再代入を防ぐ）
+    final SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);//
+    // 引数にLongの最大値をTimeoutとして指定する
+
+    try {
+      this.kekka.result(emitter);
+    } catch (IOException e) {
+      // 例外の名前とメッセージだけ表示する
+      logger.warn("Exception:" + e.getClass().getName() + ":" + e.getMessage());
+      emitter.complete();
+    }
+    return emitter;
+  }
 }
